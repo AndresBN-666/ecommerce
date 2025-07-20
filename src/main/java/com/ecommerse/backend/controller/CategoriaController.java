@@ -24,8 +24,7 @@ public class CategoriaController {
 
     @Operation(summary = "Listar Todas las Categorias")
     @ApiResponse(responseCode = "200", description = "Listado Completo de todas las Categorias")
-    @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping
+    @GetMapping("/listar")
     public ResponseEntity<List<CategoriaDTO>> listar(){
         return ResponseEntity.ok(service.listarTodas());
     }

@@ -12,4 +12,5 @@ public interface ProductoService {
     ProductoDTO actualizarProducto(Long id, CrearProductoDTO dto);
     void eliminarProducto(Long id);
     void actualizarImagen(Long idProducto, String urlImagen);
+    List<ProductoDTO> buscarPorCategoria(Long idCategoria);
 }

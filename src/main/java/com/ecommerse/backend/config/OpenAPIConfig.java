@@ -15,9 +15,9 @@ public class OpenAPIConfig {
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("API de Citas Medicas")
+                        .title("API de E-commerce")
                         .version("1.0")
-                        .description("Documentación de la API de gestion de citas medicas con autenticación y gestión de usuarios"))
+                        .description("Documentación de la API de tienda online"))
                 .addSecurityItem(new SecurityRequirement()
                         .addList(SECURITY_SCHEME_NAME))
                 .components(new io.swagger.v3.oas.models.Components()

@@ -74,4 +74,10 @@ public class ProductoServiceImpl implements ProductoService {
         producto.setImagenUrl(urlImagen);
         productoRepository.save(producto);
     }
+
+    @Override
+    public List<ProductoDTO> buscarPorCategoria(Long idCategoria) {
+        List<Producto> producto = productoRepository.findByCategoria_Id(idCategoria);
+        return mapper.toDtoList(producto);
+    }
 }

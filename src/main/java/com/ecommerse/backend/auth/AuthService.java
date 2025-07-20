@@ -34,6 +34,8 @@ public class AuthService {
 
     public AuthToken login(LoginDTO dto){
 
+        System.out.println("correo: "+ dto.getCorreo());
+
         Usuario usuario = usuarioRepository.findByCorreo(dto.getCorreo())
                 .orElseThrow(() -> new RuntimeException("Correo no registrado"));
         if (!passwordEncoder.matches(dto.getClave(), usuario.getClave())){

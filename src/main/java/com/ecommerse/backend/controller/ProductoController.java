@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.persistence.Lob;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -98,6 +99,16 @@ public class ProductoController {
         String url = cloudinaryService.subirImagen(archivo);
         service.actualizarImagen(id, url);
         return ResponseEntity.ok(url);
+    }
+
+
+    @Operation(
+            summary = "Obtener Productos por categoria",
+            description = "Retorna lista de productos por categoria"
+    )
+    @GetMapping("/filtrarPorCategoria")
+    public ResponseEntity<List<ProductoDTO>> buscarPorCategoria(@RequestParam Long categoriaId){
+        return ResponseEntity.ok(service.buscarPorCategoria(categoriaId));
     }
 }
 
