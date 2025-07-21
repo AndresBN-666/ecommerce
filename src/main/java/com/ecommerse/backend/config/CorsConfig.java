@@ -14,7 +14,8 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:8081") // Cambia si tu frontend está en otro puerto
+                        .allowedOrigins("http://localhost:8081",
+                                "https://5781dd9aa708.ngrok-free.app") // Cambia si tu frontend está en otro puerto
                         .allowedMethods("*")
                         .allowedHeaders("*")
                         .allowCredentials(true);
