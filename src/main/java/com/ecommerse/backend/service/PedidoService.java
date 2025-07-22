@@ -25,4 +25,9 @@ public interface PedidoService {
 
     List<PedidoDTO> buscarMisPedidosPorEstado(EstadoPedido estado);
 
+    // finalizar compra desde Webhook
+    PedidoDTO finalizarCompraDesdeWebhook(Long carritoId);
+
+/*    PedidoDTO getPedidoPorExternalReference(Long externalReference);*/
+
 }

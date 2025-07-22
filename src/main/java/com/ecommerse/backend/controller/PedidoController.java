@@ -146,4 +146,10 @@ public class PedidoController {
             @PathVariable EstadoPedido estado){
         return ResponseEntity.ok(pedidoService.buscarMisPedidosPorEstado(estado));
     }
+
+/*    @GetMapping("/pedidoId/{id}")
+    public ResponseEntity<PedidoDTO> getPedidoById(@PathVariable("id") Long externalReference) {
+        PedidoDTO pedido = pedidoService.getPedidoPorExternalReference(externalReference);
+        return ResponseEntity.ok(pedido);
+    }*/
 }

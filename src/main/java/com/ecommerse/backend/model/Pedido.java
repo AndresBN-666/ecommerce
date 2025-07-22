@@ -25,6 +25,7 @@ public class Pedido {
 
     private Double total;
 
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private EstadoPedido estadoPedido;

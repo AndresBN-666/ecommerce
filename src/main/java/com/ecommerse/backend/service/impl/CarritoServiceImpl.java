@@ -5,8 +5,10 @@ import com.ecommerse.backend.dto.carrito.AgregarItemDTO;
 import com.ecommerse.backend.dto.carrito.CarritoDTO;
 import com.ecommerse.backend.mapper.CarritoMapper;
 import com.ecommerse.backend.model.Carrito;
+import com.ecommerse.backend.model.Producto;
 import com.ecommerse.backend.model.Usuario;
 import com.ecommerse.backend.repository.CarritoRepository;
+import com.ecommerse.backend.repository.ProductoRepository;
 import com.ecommerse.backend.repository.UsuarioRepository;
 import com.ecommerse.backend.service.CarritoService;
 import com.ecommerse.backend.service.ItemCarritoService;
@@ -25,6 +27,7 @@ import java.util.Optional;
 public class CarritoServiceImpl implements CarritoService {
 
     private final CarritoRepository carritoRepository;
+    private final ProductoRepository productoRepository;
     private final UsuarioRepository usuarioRepository;
     private final ItemCarritoService itemCarritoService;
     private final CarritoMapper carritoMapper;
@@ -42,6 +45,15 @@ public class CarritoServiceImpl implements CarritoService {
 
         Usuario usuario = usuarioRepository.findByCorreo(correoUsuario)
                 .orElseThrow(()-> new RuntimeException("Para continuar debe registrarse"));
+
+        Producto producto = productoRepository.findById(dto.getProductoId())
+                .orElseThrow(()-> new RuntimeException("Producto no encontrado"));
+
+        if (producto.getStock() < dto.getCantidad()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "Stock insuficiente");
+        }
+
 
         Carrito carrito = carritoRepository.findByUsuario_IdAndActivoTrue(usuario.getId())
                 .orElseGet(() ->{

@@ -189,4 +189,82 @@ public class PedidoServiceImpl implements PedidoService {
 
         return pedidoMapper.toDTOList(pedido);
     }
+
+    @Override
+    @Transactional
+    public PedidoDTO finalizarCompraDesdeWebhook(Long carritoId) {
+
+        Carrito carrito = carritoRepository.findById(carritoId) // Buscar por ID del carrito
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Carrito no encontrado para ID: " + carritoId));
+
+        // Obtener el usuario directamente del carrito
+        Usuario usuario = carrito.getUsuario();
+        if (usuario == null) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Usuario asociado al carrito no encontrado.");
+        }
+
+        // Asegurarse de que no se procese dos veces si el webhook llega duplicado
+        if (!carrito.isActivo()) {
+            System.out.println("Carrito " + carritoId + " ya no está activo. Posible webhook duplicado.");
+            // Opcional: puedes lanzar una excepción o simplemente retornar si ya está procesado
+            // return pedidoMapper.toDTO(pedidoRepository.findByCarritoId(carritoId).orElse(null)); // Si ya guardas el pedido con ref de carrito
+             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                     "Carrito " + carritoId + " ya no está activo. Posible webhook duplicado."); // O una respuesta adecuada
+        }
+
+        if (carrito.getItems().isEmpty()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "El carrito esta vacio");
+        }
+
+        carrito.setActivo(false);
+        carritoRepository.save(carrito);
+
+        List<Producto> productosActualizados = new ArrayList<>();
+
+        for (ItemCarrito itemStock : carrito.getItems()){
+            Producto producto = itemStock.getProducto();
+            if (producto.getStock() < itemStock.getCantidad()){
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                        "Stock insuficiente para el producto: " + producto.getNombre());
+            }
+            producto.setStock(producto.getStock()-itemStock.getCantidad());
+            productosActualizados.add(producto);
+        }
+
+        productoRepository.saveAll(productosActualizados);
+
+        Pedido pedido = Pedido.builder()
+                .usuario(usuario)
+                .fecha(LocalDateTime.now())
+                .total(carrito.getItems().stream()
+                        .mapToDouble(ItemCarrito::getSubtotal)
+                        .sum())
+                .estadoPedido(EstadoPedido.PENDIENTE)
+                .build();
+
+        for (ItemCarrito itemCarrito : carrito.getItems()){
+            DetallePedido detallePedido = DetallePedido.builder()
+                    .producto(itemCarrito.getProducto())
+                    .cantidad(itemCarrito.getCantidad())
+                    .precioUnitario(itemCarrito.getProducto().getPrecio())
+                    .subtotal(itemCarrito.getSubtotal())
+                    .pedido(pedido)
+                    .build();
+            pedido.getDetalles().add(detallePedido);
+        }
+
+        pedidoRepository.save(pedido);
+
+        return pedidoMapper.toDTO(pedido);
+
+    }
+
+/*    @Override
+    public PedidoDTO getPedidoPorExternalReference(Long externalReference) {
+        Pedido pedido = pedidoRepository.findBycarritoIdOriginal(externalReference)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Pedido no encontrado para la referencia: " + externalReference));
+        return pedidoMapper.toDTO(pedido);
+
+    }*/
 }

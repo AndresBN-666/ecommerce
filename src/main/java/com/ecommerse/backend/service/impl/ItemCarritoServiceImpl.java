@@ -33,6 +33,10 @@ public class ItemCarritoServiceImpl implements ItemCarritoService {
         }
 
         if (itemCarrito!=null){
+            if (itemCarrito.getProducto().getStock()< cantidad){
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Stock Insuficiente");
+            }
             itemCarrito.setCantidad(itemCarrito.getCantidad() + cantidad);
             itemCarrito.setSubtotal(producto.getPrecio() * itemCarrito.getCantidad());
             return itemCarritoRepository.save(itemCarrito);
@@ -75,7 +79,14 @@ public class ItemCarritoServiceImpl implements ItemCarritoService {
             }
         }
 
+
         if (itemCarrito != null){
+
+            if (itemCarrito.getProducto().getStock()<cantidad){
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Stock insuficiente");
+            }
+
             if (cantidad<=0){
                 itemCarritoRepository.delete(itemCarrito);
                 carrito.getItems().remove(itemCarrito);
