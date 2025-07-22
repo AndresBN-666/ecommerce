@@ -56,9 +56,9 @@ public class PagoServiceImpl implements PagoService {
             }
 
             PreferenceBackUrlsRequest backUrls = PreferenceBackUrlsRequest.builder()
-                    .success("https://cb7dc620478c.ngrok-free.app/pago/exito") // Tu frontend: página de éxito
-                    .pending("https://cb7dc620478c.ngrok-free.app/pago/pendiente") // Tu frontend: página de pendiente
-                    .failure("https://cb7dc620478c.ngrok-free.app/pago/fallido")   // Tu frontend: página de fallo
+                    .success("https://8278f7d5bfd6.ngrok-free.app/pago/exito") // Tu frontend: página de éxito
+                    .pending("https://8278f7d5bfd6.ngrok-free.app/pago/pendiente") // Tu frontend: página de pendiente
+                    .failure("https://8278f7d5bfd6.ngrok-free.app/pago/fallido")   // Tu frontend: página de fallo
                     .build();
 
             PreferencePayerRequest payerRequest = PreferencePayerRequest.builder()
