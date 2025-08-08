@@ -90,7 +90,7 @@ soluciones reales con buenas prácticas y enfoque profesional.
 ## 🖼️ Capturas de pantalla
 
 ### 🛍️ Panel de productos
-![Productos](./screenshots/productos-inicio.png)
+![Productos](./screenshots/captura02.png)
 
 ### 🔐 Formulario de inicio de sesión
 ![Login](./screenshots/login.png)
